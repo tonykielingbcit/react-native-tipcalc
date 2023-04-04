@@ -1,15 +1,31 @@
 import { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import { scale } from "react-native-size-matters";
+import { RadioButton } from 'react-native-paper';
 
 const MIN_RANDOM_NUMBER = 10;
 const MAX_RANDOM_NUMBER = 300;
+
+const buttons = [
+    {
+        value: 10
+    },
+    {
+        value: 15
+    },
+    {
+        value: 18
+    },
+    {
+        value: 20
+    },
+];
 
 export default function App() {
     const [serviceCost, setServiceCost] = useState(0);
     const [billAmount, setBillAmount] = useState("");
     const [total, setTotal] = useState("");
-    const [tipPercent, setTipPercentage] = useState(10);
+    const [tipPercent, setTipPercent] = useState(10);
     const [tipAmount, setTipAmount] = useState(0);
     const refInput = useRef(null);
 
@@ -20,13 +36,12 @@ export default function App() {
 
 
     useEffect(() => {
-        // console.log("useEffect is running")
         const tempTipAmount = (Number(serviceCost) * (Number(tipPercent) / 100));
         const tempTotal = (Number(serviceCost) + Number(tempTipAmount));
         setTipAmount(tempTipAmount.toFixed(2));
         setTotal(tempTotal.toFixed(2));
         if (Number(serviceCost) === 0)
-            setBillAmount("");
+            setBillAmount("0.00");
         else
             setBillAmount(Number(serviceCost).toFixed(2))
     }, [serviceCost, tipPercent]);
@@ -49,6 +64,7 @@ export default function App() {
     
     const clearAction = () => {
         setServiceCost("");
+        setBillAmount("0.00");
         refInput.current.focus();
     }
 
@@ -57,26 +73,59 @@ export default function App() {
     <View style={styles.container}>
         <Text style={styles.title}>Calculate Tip</Text>
         <Button style={styles.randomButton} onPress={() => generateRandomNumber()} title="Generate random Tip"></Button>
+
         <View style={styles.inputContainer}>
             <Text style={styles.inputItem1}>$</Text>
-            {/* <Text>@</Text> */}
             <TextInput style={styles.textInput} keyboardType='number-pad' 
                     onChangeText={n => changeServiceCost(n)} ref = {refInput}
-            >{serviceCost}</TextInput>
+                    >{serviceCost}</TextInput>
             <View style={styles.buttonClearSection}>
                 <Button style={styles.clearButton} title='Clear' color={`#b22222`} onPress={clearAction}></Button>
             </View>
         </View>
 
 
-        <View>
-            <View>
-                <Button title='B1'></Button>
-                <Button title='B2'></Button>
+        <View style={styles.percentageContainer}>
+            <View style={styles.rowPercentages}>
+                <RadioButton.Item
+                    label={`${buttons[0].value}%`}
+                    value={buttons[0].value}
+                    status={tipPercent === buttons[0].value ? "checked" : "unchecked"}
+                    onPress={() => setTipPercent(buttons[0].value)}
+                    style={{
+                        ...styles.rowPercentagesItems,
+                        // marginBottom: scale(20),
+                        backgroundColor: tipPercent === buttons[0].value ? "lightblue" : "darkseagreen"}}
+                />
+                <RadioButton.Item
+                    label={`${buttons[1].value}%`}
+                    value={buttons[1].value}
+                    status={tipPercent === buttons[1].value ? "checked" : "unchecked"}
+                    onPress={() => setTipPercent(buttons[1].value)}
+                    style={{
+                        ...styles.rowPercentagesItems, 
+                        backgroundColor: tipPercent === buttons[1].value ? "lightblue" : "darkseagreen"}}
+                />
             </View>
-            <View>
-                <Button title='B3'></Button>
-                <Button title='B4'></Button>
+            <View style={styles.rowPercentages}>
+                <RadioButton.Item
+                    label={`${buttons[2].value}%`}
+                    value={buttons[2].value}
+                    status={tipPercent === buttons[2].value ? "checked" : "unchecked"}
+                    onPress={() => setTipPercent(buttons[2].value)}
+                    style={{
+                        ...styles.rowPercentagesItems, 
+                        backgroundColor: tipPercent === buttons[2].value ? "lightblue" : "darkseagreen"}}
+                />
+                <RadioButton.Item
+                    label={`${buttons[3].value}%`}
+                    value={buttons[3].value}
+                    status={tipPercent === buttons[3].value ? "checked" : "unchecked"}
+                    onPress={() => setTipPercent(buttons[3].value)}
+                    style={{
+                        ...styles.rowPercentagesItems, 
+                        backgroundColor: tipPercent === buttons[3].value ? "lightblue" : "darkseagreen"}}
+                />
             </View>
         </View>
 
@@ -99,28 +148,24 @@ const styles = StyleSheet.create({
         // justifyContent: 'center',
     },
     title: {
-        paddingTop: scale(50),
-        fontSize: scale(25),
+        paddingTop: scale(40),
+        fontSize: scale(30),
         fontWeight: "bold",
         marginBottom: scale(30)
     },
-    randomButton: {
-        // marginTop: scale(50),
-        backgroundColor: "red"
-    },
     inputContainer: {
-        // flex: 1,
         flexDirection: "row",
         width: "100%",
-        marginTop: scale(50),
-        backgroundColor: "red",
+        marginTop: scale(40),
+        backgroundColor: "lightgrey",
         height: scale(70)
     },
     inputItem1: {
         paddingLeft: scale(20),
         color: "white",
         fontSize: scale(30),
-        textAlignVertical: "center"
+        textAlignVertical: "center",
+        color: "black"
     },
     textInput: {
         flex: 1,
@@ -128,60 +173,43 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: scale(30),
         textAlignVertical: "center",
+        color: "black",
+        fontWeight: "bold"
     },
     buttonClearSection: {
-        // flexDirection: "column",
-        // flex: 1,
-        padding: 0,
-        // backgroundColor: "gray",
-        // padding: 0,
-        // flex: 1,
-        // height: scale(70),
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#b22222"
+        backgroundColor: "darkseagreen",
     },
     clearButton: {
         backgroundColor: "#b22222",
-        // display: "flex",
-        // flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // margin: 0,
-        // padding: scale(50),
-
-        // flex: 1,
-        // height: scale(70)
-        textAlignVertical: "center"
-        // height: "100%",
-        // width: "15%",
-        // flexDirection: "column",
-        // // color: '#000000',
-        // textAlign: 'center',
-        // // alignSelf: 'center',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // textAlignVertical: 'center',
-        // alignContent: 'center'
-
-        // verticalAlign: "middle",
-        // alignSelf: "center"
-        // alignContent: "center"
-        // alignItems: "center"
-        // textAlignVertical: "center"
+        textAlignVertical: "center",
     },
 
 
+    percentageContainer: {
+        marginVertical: scale(35),
+        marginBottom: scale(40)
+    },
+    rowPercentages: {
+        flexDirection: "row",
+    },
+    rowPercentagesItems: {
+        backgroundColor: "darkseagreen",
+        borderRadius: scale(20),
+        fontSize: scale(30),
+        margin: scale(5)
+    },
+
     totalTexts: {
-        // display: "flex",
-        justifyContent: "flex-end",
+        marginLeft: "auto",
         fontSize: scale(25),
         fontWeight: "bold",
-
     },
     divider: {
         width: "100%",
         borderBottomColor: 'lightgray',
-        borderBottomWidth: scale(5)
+        borderBottomWidth: scale(5),
+        marginVertical: scale(10)
     }
 });
