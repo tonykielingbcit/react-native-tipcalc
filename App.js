@@ -49,13 +49,12 @@ export default function App() {
 
     const changeServiceCost = incoming => {
         try {
-            // console.log("incoming: ", incoming, billAmount) //, Number(incoming))
-            // // const temp = Number(incoming);
-            // console.log("temp= ", incoming.length)
             if (incoming === 0 || (!Number(incoming)))
-                setServiceCost(0);
-            if (incoming !== "0.00")
+                setServiceCost(0); 
+             
+            if (incoming !== "0.00") 
                 setServiceCost(incoming);
+             
         } catch(err) {
             console.log("error: ", err.message || err);
         }
@@ -64,7 +63,6 @@ export default function App() {
     
     const clearAction = () => {
         setServiceCost("");
-        setBillAmount("0.00");
         refInput.current.focus();
     }
 
@@ -72,13 +70,21 @@ export default function App() {
     return (
     <View style={styles.container}>
         <Text style={styles.title}>Calculate Tip</Text>
-        <Button style={styles.randomButton} onPress={() => generateRandomNumber()} title="Generate random Tip"></Button>
+        <Button onPress={generateRandomNumber} title="Generate random Tip"></Button>
 
+        <Text style={styles.costLabel}>Cost of Service</Text>
         <View style={styles.inputContainer}>
-            <Text style={styles.inputItem1}>$</Text>
-            <TextInput style={styles.textInput} keyboardType='number-pad' 
-                    onChangeText={n => changeServiceCost(n)} ref = {refInput}
-                    >{serviceCost}</TextInput>
+                <View style={styles.inputSubContainer}>
+                    <Text style={styles.inputItem1}>$</Text>
+                    <TextInput 
+                        keyboardType='number-pad' 
+                        onChangeText={n => changeServiceCost(n)} ref = {refInput}
+                        style={styles.textInput} 
+                    >
+                        {serviceCost}
+                    </TextInput>
+                </View>
+
             <View style={styles.buttonClearSection}>
                 <Button style={styles.clearButton} title='Clear' color={`#b22222`} onPress={clearAction}></Button>
             </View>
@@ -94,7 +100,6 @@ export default function App() {
                     onPress={() => setTipPercent(buttons[0].value)}
                     style={{
                         ...styles.rowPercentagesItems,
-                        // marginBottom: scale(20),
                         backgroundColor: tipPercent === buttons[0].value ? "lightblue" : "darkseagreen"}}
                 />
                 <RadioButton.Item
@@ -153,12 +158,25 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: scale(30)
     },
+    costLabel: {
+        marginTop: scale(35),
+        textAlign:"center",
+        fontSize: scale(15),
+        fontWeight: "bold"
+    },
     inputContainer: {
         flexDirection: "row",
+        justifyContent: "space-between",
         width: "100%",
-        marginTop: scale(40),
-        backgroundColor: "lightgrey",
+        // marginTop: scale(40),
         height: scale(70)
+    },
+    inputSubContainer: {
+        flexDirection: "row",
+        flex: 1,
+        marginRight: scale(10),
+        backgroundColor: "lightgrey",
+        borderRadius: scale(10)
     },
     inputItem1: {
         paddingLeft: scale(20),
@@ -185,7 +203,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#b22222",
         textAlignVertical: "center",
     },
-
 
     percentageContainer: {
         marginVertical: scale(35),
